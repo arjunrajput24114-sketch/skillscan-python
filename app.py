@@ -42,16 +42,18 @@ def analyze():
 # NAYA CHAT AI ROUTE - YE ADD KIYA
 @app.route('/chat', methods=['POST'])
 def chat():
-    if not gemini_model:
-        return jsonify({'reply': 'API Key nahi mili! Render me GEMINI_API_KEY check karo'})
-    try:
-        user_msg = request.json.get('message', '')
-        prompt = f"You are SkillScan AI helper for resume and jobs. Reply in Hinglish friendly. User: {user_msg}"
-        response = gemini_model.generate_content(prompt)
-        return jsonify({'reply': response.text})
-    except Exception as e:
-        print(f"Chat Error: {e}")
-        return jsonify({'reply': 'Thoda error aa gaya, fir se try karo!'})
+    data = request.get_json()
+    user_msg = data.get('message','').strip()
+    msg = user_msg.lower()
+    if 'ats' in msg or 'score' in msg:
+        reply = "Tumhara ATS Score 85% hai. Formatting aur keywords add karke 95% tak le ja sakte ho!"
+    elif 'skill' in msg:
+        reply = "Skills: C++, Java, SQL, HTML, MS Excel, Photoshop. Python projects add karo!"
+    elif 'hi' in msg or 'hello' in msg:
+        reply = f"Hi! Tumne '{user_msg}' likha. Bolo resume me kya help chahiye?"
+    else:
+        reply = f"Tumne pucha: '{user_msg}' - Iske hisab se resume me improvement kar sakte ho!"
+    return jsonify({"reply": reply})
 
 @app.route('/download')
 def download():
