@@ -1,50 +1,13 @@
 <!DOCTYPE html>
-<html>
-<body style="background: #0f172a; color: white; text-align: center; padding: 50px; font-family: Arial;">
+<html><body style="background:#0f172a;color:white;text-align:center;padding:60px;font-family:sans-serif">
 <h1>SkillScan AI</h1>
-<p>Resume Upload Karo</p>
 <form action="/analyze" method="post" enctype="multipart/form-data">
 <input type="file" name="resume" accept=".pdf" required><br><br>
-<button style="padding:12px 24px;background:#a855f7;color:white;border:none;border-radius:8px;">Analyze Resume</button>
+<button style="padding:12px 24px;background:#a855f7;color:white;border:none;border-radius:8px;cursor:pointer">Analyze</button>
 </form>
 
-<!-- CHAT AI BOX START -->
-<style>
-#chat-btn{position:fixed; bottom:20px; right:20px; background:#a855f7; color:white; border:none; border-radius:50%; width:60px; height:60px; font-size:28px; cursor:pointer; z-index:9999; box-shadow:0 4px 15px rgba(168,85,247,0.4);}
-#chat-win{display:none; position:fixed; bottom:90px; right:20px; width:320px; height:400px; background:#1e293b; border:2px solid #a855f7; border-radius:15px; z-index:9999; flex-direction:column; overflow:hidden;}
-#chat-head{background:#a855f7; padding:12px; color:white; font-weight:bold; display:flex; justify-content:space-between;}
-#chat-msgs{flex:1; overflow-y:auto; padding:10px; color:white; font-size:14px; text-align:left;}
-#chat-input-area{display:flex; padding:8px; border-top:1px solid #333; background:#0f172a;}
-#chat-input-area input{flex:1; padding:10px; border-radius:8px; border:none; background:#2a2a2a; color:white; outline:none;}
-#chat-input-area button{margin-left:5px; background:#a855f7; border:none; color:white; padding:8px 14px; border-radius:8px; cursor:pointer;}
-</style>
-<button id="chat-btn" onclick="let w=document.getElementById('chat-win'); w.style.display=w.style.display==='flex'?'none':'flex'">💬</button>
-<div id="chat-win">
-  <div id="chat-head"><span>SkillScan AI Chat</span><span onclick="document.getElementById('chat-win').style.display='none'" style="cursor:pointer;">X</span></div>
-  <div id="chat-msgs"><div style="color:#94a3b8; font-size:13px;">Hi! Resume ke baare me kuch bhi pucho...</div></div>
-  <div id="chat-input-area">
-    <input id="chatInput" placeholder="Kuch bhi pucho..." onkeypress="if(event.key==='Enter')sendChat()">
-    <button onclick="sendChat()">Send</button>
-  </div>
-</div>
-<script>
-async function sendChat(){
- let inp=document.getElementById('chatInput');
- let msg=inp.value.trim(); if(!msg) return;
- let box=document.getElementById('chat-msgs');
- box.innerHTML+=`<div style='margin:8px 0; background:#334155; padding:8px; border-radius:8px;'><b style='color:#a855f7'>You:</b> ${msg}</div>`;
- inp.value='';
- let typing=document.createElement('div'); typing.id='typing'; typing.style.cssText='margin:8px 0; color:gray; font-style:italic;'; typing.innerText='AI soch raha hai...'; box.appendChild(typing);
- box.scrollTop=box.scrollHeight;
- try{
-  let res=await fetch('/chat',{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message:msg})});
-  let data=await res.json();
-  document.getElementById('typing')?.remove();
-  box.innerHTML+=`<div style='margin:8px 0; background:#1a1a1a; padding:8px; border-radius:8px; border-left:3px solid #22c55e;'><b style='color:#22c55e'>AI:</b> ${data.reply}</div>`;
-  box.scrollTop=box.scrollHeight;
- }catch(e){ document.getElementById('typing').innerHTML='Error! Fir se try karo'; }
-}
-</script>
-<!-- CHAT AI BOX END -->
-</body>
-</html>
+<style>#chat-btn{position:fixed;bottom:20px;right:20px;background:#a855f7;color:#fff;border:none;border-radius:50%;width:60px;height:60px;font-size:28px;cursor:pointer;z-index:9999}#chat-win{display:none;position:fixed;bottom:90px;right:20px;width:320px;height:380px;background:#1e293b;border:2px solid #a855f7;border-radius:15px;z-index:9999;flex-direction:column}#chat-head{background:#a855f7;padding:10px;color:#fff;font-weight:bold}#chat-msgs{flex:1;overflow-y:auto;padding:10px;text-align:left;font-size:14px}#chat-input-area{display:flex;padding:8px;border-top:1px solid #444}#chat-input-area input{flex:1;padding:8px;border-radius:6px;border:none;background:#334155;color:#fff}#chat-input-area button{margin-left:5px;background:#a855f7;color:#fff;border:none;padding:8px 12px;border-radius:6px}</style>
+<button id="chat-btn" onclick="document.getElementById('chat-win').style.display='flex'">💬</button>
+<div id="chat-win"><div id="chat-head">AI Chat <span onclick="document.getElementById('chat-win').style.display='none'" style="float:right;cursor:pointer">X</span></div><div id="chat-msgs"></div><div id="chat-input-area"><input id="chatInput" placeholder="Pucho..."><button onclick="sendChat()">Send</button></div></div>
+<script>async function sendChat(){let i=document.getElementById('chatInput'),m=i.value;if(!m)return;let b=document.getElementById('chat-msgs');b.innerHTML+=`<div><b>You:</b> ${m}</div>`;i.value='';let r=await fetch('/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:m})});let d=await r.json();b.innerHTML+=`<div><b style="color:#22c55e">AI:</b> ${d.reply}</div>`}</script>
+</body></html>
